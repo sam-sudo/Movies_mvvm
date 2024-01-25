@@ -1,4 +1,4 @@
-package com.happydonia.movies.model
+package com.hoopCarpool.movies.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

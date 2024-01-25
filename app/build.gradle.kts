@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.happydonia.movies"
+    namespace = "com.hoopCarpool.movies"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.happydonia.movies"
+        applicationId = "com.hoopCarpool.movies"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
