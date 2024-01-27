@@ -63,7 +63,14 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+
+    implementation ("androidx.compose.runtime:runtime-livedata:1.1.0")
+
     // Android Studio Preview support
     implementation("androidx.compose.ui:ui-tooling-preview")
     debugImplementation("androidx.compose.ui:ui-tooling")
+
+    //Images
+    implementation ("io.coil-kt:coil-compose:1.4.0")
+
 }

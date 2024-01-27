@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="primaryBackground">#242424</color>
+    <color name="primaryTextColor">#ADADAD</color>
+    <color name="starsColor">#FBB03B</color>
 </resources>
