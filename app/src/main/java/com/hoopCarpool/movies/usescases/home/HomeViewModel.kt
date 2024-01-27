@@ -14,11 +14,16 @@ class HomeViewModel : ViewModel() {
     var movieProvider = MoviesProvider()
 
     private val _movies = MutableLiveData<List<Movie>>()
-    val movies: LiveData<List<Movie>> = _movies
+    val movies: LiveData<List<Movie>> get() = _movies
 
+    var moviesInmutable = listOf<Movie>()
 
     init {
         loadMovies()
+    }
+
+    fun getMoviesList(): LiveData<List<Movie>> {
+        return movies
     }
 
 
@@ -27,8 +32,20 @@ class HomeViewModel : ViewModel() {
         _movies.postValue(movies)
     }*/
 
-    fun getMoviesSize(): Int?{
-        return movies.value?.size
+    /*fun getMoviesSize(): Int?{
+        return movies.size
+    }*/
+
+    fun getMoviesByTitle(title: String) {
+        if (title.isNotEmpty()) {
+            val filteredMovies = moviesInmutable.filter { movie ->
+                movie.title.contains(title, ignoreCase = true)
+            }
+            _movies.postValue(filteredMovies)
+            Log.w("TAG", "getMoviesByTitle: ${_movies.value}", )
+        } else {
+            _movies.value = moviesInmutable
+        }
     }
 
     fun loadMovies(){
@@ -38,8 +55,10 @@ class HomeViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-                val movies = movieProvider.getMovies()
+
+                var movies = movieProvider.getMovies()
                 _movies.value = movies
+                moviesInmutable = movies
             }catch (e: Exception){
                 Log.e("TAG", "loadMovies exeption ${e.message} ", )
             }

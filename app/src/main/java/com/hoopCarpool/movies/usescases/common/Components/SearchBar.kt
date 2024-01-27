@@ -67,9 +67,7 @@ fun SearchBar(onSearch: (String) -> Unit) {
 
 
 @Composable
-fun SearchScreen() {
-    var searchQuery by remember { mutableStateOf("") }
-
+fun SearchScreen(onSearch: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,10 +75,8 @@ fun SearchScreen() {
 
     ) {
         SearchBar(onSearch = { query ->
-            searchQuery = query
-            // Handle search query as needed (e.g., filtering a list)
+            onSearch(query)
         })
 
-        // Rest of your UI goes here
     }
 }
