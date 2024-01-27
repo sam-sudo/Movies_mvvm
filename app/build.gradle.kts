@@ -73,4 +73,7 @@ dependencies {
     //Images
     implementation ("io.coil-kt:coil-compose:1.4.0")
 
+    //SwipeTorefrash
+    implementation ("com.google.accompanist:accompanist-swiperefresh:0.27.0")
+
 }

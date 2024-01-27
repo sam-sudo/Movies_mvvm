@@ -16,7 +16,10 @@ class HomeViewModel : ViewModel() {
     private val _movies = MutableLiveData<List<Movie>>()
     val movies: LiveData<List<Movie>> get() = _movies
 
-    var moviesInmutable = listOf<Movie>()
+    private var moviesInmutable = listOf<Movie>()
+
+    private val _isLoading = MutableLiveData<Boolean>(false)
+    val isLoading = _isLoading
 
     init {
         loadMovies()
@@ -24,6 +27,9 @@ class HomeViewModel : ViewModel() {
 
     fun getMoviesList(): LiveData<List<Movie>> {
         return movies
+    }
+    fun getMoviesInmutable(): List<Movie> {
+        return moviesInmutable
     }
 
 
@@ -55,8 +61,10 @@ class HomeViewModel : ViewModel() {
 
         viewModelScope.launch {
             try {
-
+                _isLoading.value = true
                 var movies = movieProvider.getMovies()
+                _isLoading.value = false
+
                 _movies.value = movies
                 moviesInmutable = movies
             }catch (e: Exception){
