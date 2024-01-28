@@ -3,6 +3,7 @@ package com.hoopCarpool.movies.usescases.common.Components
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,10 +31,12 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.hoopCarpool.movies.R
 import com.hoopCarpool.movies.model.Movie
+import com.hoopCarpool.movies.navigation.AppScreens
 
 class MovieItemList {
 
@@ -41,30 +44,31 @@ class MovieItemList {
     companion object{
 
         @Composable
-        fun ListItemCard(movie : Movie) {
+        fun ListItemCard(movie : Movie, navController: NavController) {
+
+            val painter = rememberImagePainter(
+                data = movie.imageUrl,
+                builder = {
+                    crossfade(true)
+                    error(
+                        R.drawable.ic_no_image
+                    )
+                }
+            )
+            val painterState = painter.state
+
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .size(200.dp)
                     .padding(16.dp)
+                    .clickable {
+                        Log.w("TAG", "ListItemCard detail ", )
+                        navController.navigate(route = AppScreens.MovieDetailScreen.route +"/"+ movie.id)
+                    }
+
             ) {
-
-
-
-                val painter = rememberImagePainter(
-                    data = movie.imageUrl,
-                    builder = {
-                        crossfade(true)
-                        error(
-                            R.drawable.ic_no_image
-                        )
-                    },
-
-
-                )
-
-
-                val painterState = painter.state
 
                 if (painterState is ImagePainter.State.Loading) {
 
@@ -124,13 +128,13 @@ class MovieItemList {
                             )
                         }
                     }
+
+
                 }
 
-
-
-
-
             }
+
+
         }
 
         @Composable

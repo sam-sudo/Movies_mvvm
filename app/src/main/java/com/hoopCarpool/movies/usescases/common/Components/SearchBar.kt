@@ -68,15 +68,7 @@ fun SearchBar(onSearch: (String) -> Unit) {
 
 @Composable
 fun SearchScreen(onSearch: (String) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.Transparent)
-
-    ) {
-        SearchBar(onSearch = { query ->
-            onSearch(query)
-        })
-
-    }
+    SearchBar(onSearch = { query ->
+        onSearch(query)
+    })
 }

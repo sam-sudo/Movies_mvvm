@@ -10,5 +10,7 @@
 
     <color name="primaryBackground">#242424</color>
     <color name="primaryTextColor">#ADADAD</color>
+    <color name="secondaryTextColor">#242424</color>
     <color name="starsColor">#FBB03B</color>
+    <color name="primaryButtonColor">#FBB03B</color>
 </resources>

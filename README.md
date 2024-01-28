@@ -15,16 +15,16 @@ The goal of this project is to create a movie viewer application using Kotlin an
 - [ ] **Architecture**: Implement the MVVM (Model-View-ViewModel) architecture to structure the application.
 - [ ] **Loading Animation**: Include a loading animation in both the Home and Detail Screens. This could be a spinner or linear loading indicator.
 - [ ] **Favorites**: Provide a button to add movies to favorites. Display an indicator icon in the list and on the favorites screen.
-- [ ] **Pull to Refresh**: Implement the pull-to-refresh feature to refresh the list of movies.
+- [x] **Pull to Refresh**: Implement the pull-to-refresh feature to refresh the list of movies.
 - [ ] **Testing**: Include at least one unit test to ensure the reliability of the application.
 
 ## Additional Considerations
 
 The following aspects are positively valued in the project:
 
-- [ ] **Coroutines**: Use coroutines for asynchronous programming.
+- [x] **Coroutines**: Use coroutines for asynchronous programming.
 - [ ] **Data Persistence**: Implement some method of data persistence, such as Room or SharedPreferences.
 - [ ] **Dependency Injection**: Consider using dependency injection libraries to manage dependencies.
 - [ ] **Retrofit**: Utilize Retrofit or a similar library for handling network requests.
 - [ ] **Collapsing Toolbar**: Implement a collapsing toolbar on the detail screen for the movie image.
-- [ ] **Search Bar**: Include a search bar in the home screen for easy navigation.
+- [x] **Search Bar**: Include a search bar in the home screen for easy navigation.
