@@ -76,4 +76,7 @@ dependencies {
     //SwipeTorefrash
     implementation ("com.google.accompanist:accompanist-swiperefresh:0.27.0")
 
+    //Navigation
+    implementation ("androidx.navigation:navigation-compose:2.7.6")
+
 }
