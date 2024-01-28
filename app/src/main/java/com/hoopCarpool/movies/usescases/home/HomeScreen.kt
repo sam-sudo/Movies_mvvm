@@ -12,12 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,6 +38,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hoopCarpool.movies.R
+import com.hoopCarpool.movies.navigation.AppScreens
 import com.hoopCarpool.movies.usescases.common.Components.MovieItemList
 import com.hoopCarpool.movies.usescases.common.Components.SearchScreen
 
@@ -77,6 +80,23 @@ val viewModel: HomeViewModel = viewModel()
         ) {
             ListScreen(viewModel, navController)
         }
+
+        FloatingActionButton(
+            onClick = {
+            navController.navigate(AppScreens.FavoriteMoviesScreen.route)
+        },
+            shape = CircleShape,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            containerColor = colorResource(id = R.color.primaryButtonColor)
+        ) {
+            Icon(
+                imageVector = Icons.Default.FavoriteBorder,
+                "FavIcon"
+            )
+        }
+
     }
 
 }
