@@ -99,7 +99,7 @@ fun ListScreen(viewModel: HomeViewModel,navController: NavController) {
             viewModel.getMoviesByTitle(query)
             Log.w("TAG", "ListScreen: $query", )
         }
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         SwipeRefresh(
             state = swipeRefreshState,
