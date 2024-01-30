@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Movies"
         tools:targetApi="31" >
 
-        <activity android:name=".usescases.home.HomeActivity"
+        <activity android:name=".HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

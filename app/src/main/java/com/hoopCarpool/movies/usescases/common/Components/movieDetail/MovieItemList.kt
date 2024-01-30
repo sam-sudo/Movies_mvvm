@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.usescases.common.Components
+package com.hoopCarpool.movies.usescases.common.Components.movieDetail
 
 import android.util.Log
 import androidx.compose.foundation.Image

@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.usescases.home
+package com.hoopCarpool.movies
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
