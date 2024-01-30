@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Movies</string>
     <string name="homeTopBarTitle">Watchlist</string>
+    <string name="favoritesTopBarTitle">Favorites</string>
 </resources>

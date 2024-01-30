@@ -1,5 +1,6 @@
 package com.hoopCarpool.movies.usescases.home
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,9 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hoopCarpool.movies.model.Movie
 import com.hoopCarpool.movies.providers.services.MoviesProvider
+import com.hoopCarpool.movies.util.MovieSharedPreferencesHelper
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val context: Context) : ViewModel() {
 
     var movieProvider = MoviesProvider()
 
@@ -21,10 +23,10 @@ class HomeViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>(false)
     val isLoading = _isLoading
 
+    val movieSharedPreferencesHelper = MovieSharedPreferencesHelper(context)
     init {
         loadMovies()
     }
-
     fun getMoviesList(): LiveData<List<Movie>> {
         return movies
     }
@@ -33,14 +35,24 @@ class HomeViewModel : ViewModel() {
     }
 
 
-    /*fun addMovies(){
-        //movies.add(Movie("nueva","nueva sub", Icons.Default.Add))
-        _movies.postValue(movies)
-    }*/
+    suspend fun checkFavoritesMovies(movies: List<Movie>): List<Movie> {
+        val favoriteMoviesSet = movieSharedPreferencesHelper.getFavoriteMovies()
 
-    /*fun getMoviesSize(): Int?{
-        return movies.size
-    }*/
+        return movies.map { movie ->
+            // Utiliza Set.contains para verificar si el ID de la película está en el conjunto
+            movie.copy(favorite = favoriteMoviesSet.contains(movie.id))
+        }
+    }
+
+
+    fun updateMovie(updatedMovie: Movie) {
+        val updatedList = moviesInmutable.map { if (it.id == updatedMovie.id) updatedMovie else it }
+        moviesInmutable = updatedList
+
+        moviesInmutable = updatedList
+        _movies.value = updatedList
+    }
+
 
     fun getMoviesByTitle(title: String) {
         if (title.isNotEmpty()) {
@@ -48,7 +60,6 @@ class HomeViewModel : ViewModel() {
                 movie.title.contains(title, ignoreCase = true)
             }
             _movies.postValue(filteredMovies)
-            Log.w("TAG", "getMoviesByTitle: ${_movies.value}", )
         } else {
             _movies.value = moviesInmutable
         }
@@ -63,15 +74,20 @@ class HomeViewModel : ViewModel() {
             try {
                 _isLoading.value = true
                 var movies = movieProvider.getMovies()
+
+                var moviesWitFavorites = checkFavoritesMovies(movies)
+
                 _isLoading.value = false
 
-                _movies.value = movies
-                moviesInmutable = movies
+                _movies.value = moviesWitFavorites
+                moviesInmutable = moviesWitFavorites
             }catch (e: Exception){
                 Log.e("TAG", "loadMovies exeption ${e.message} ", )
             }
         }
+
     }
+
 
     /*fun getRandomMovie(): Movie{
         return MoviesProvider.random()

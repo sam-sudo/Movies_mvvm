@@ -8,5 +8,5 @@ data class Movie(
     val stars: Double,
     val year: String,
     val duration: String,
-    val favorite: Boolean = false
+    var favorite: Boolean = false
 )
