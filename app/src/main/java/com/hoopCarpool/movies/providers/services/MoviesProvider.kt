@@ -45,6 +45,51 @@ class MoviesProvider(private val context: Context) {
         }
     }
 
+    suspend fun searchMovieByName(title : String): List<Movie> {
+        val response = apiService.searchMovieByName(query =  title)
+        var movieSearchList = response.body()?.results
+        var movieList = ArrayList<Movie>()
+        Log.d("TAG", "URL: ${response.raw().request().url()}")
+
+        return if (response.isSuccessful) {
+            Log.w("TAG", "response:  ${movieSearchList}", )
+
+            movieSearchList?.forEach { movie ->
+
+                var movieDetail = getMovieDetail(movie.id)
+                Log.w("TAG", "movie:  $movie ", )
+
+                var duration = movieDetail?.duration
+
+
+                movieList.add(
+                    Movie(
+                        id = movie.id,
+                        title = movie.name,
+                        overview = movie.overview,
+                        imagePath = movie.imagePath,
+                        imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
+                        backdrop_path = movie.backdrop_path,
+                        backdrop_pathUrl = Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path,
+                        duration = duration ?: 0.0
+                    )
+                )
+
+
+            }
+
+
+            movieList
+        } else {
+            Log.w("TAG", "response.code(): ${response.code()} ", )
+            when (response.code()) {
+                else -> {
+                    emptyList()
+                }
+            }
+        }
+    }
+
     suspend fun getMovieDetail(id : String): Movie? {
         val response = apiService.getMovieById(id= id)
         val movieDetail = response.body()

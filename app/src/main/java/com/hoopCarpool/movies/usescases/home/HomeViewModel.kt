@@ -62,14 +62,31 @@ class HomeViewModel(private val context: Context) : ViewModel() {
 
 
     fun getMoviesByTitle(title: String) {
-        if (title.isNotEmpty()) {
+
+        viewModelScope.launch {
+            try {
+                _movies.value = movieProvider.searchMovieByName(title)
+            }catch (e: Exception){
+                Log.e("TAG", "getMoviesByTitle: ${e.message}", )
+                if (title.isNotEmpty()) {
+                    val filteredMovies = moviesInmutable.filter { movie ->
+                        movie.title.contains(title, ignoreCase = true)
+                    }
+                    _movies.postValue(filteredMovies)
+                } else {
+                    _movies.value = moviesInmutable
+                }
+            }
+        }
+
+        /*if (title.isNotEmpty()) {
             val filteredMovies = moviesInmutable.filter { movie ->
                 movie.title.contains(title, ignoreCase = true)
             }
             _movies.postValue(filteredMovies)
         } else {
             _movies.value = moviesInmutable
-        }
+        }*/
     }
 
     fun loadMovies(){

@@ -2,6 +2,7 @@ package com.hoopCarpool.movies.providers.services
 
 import com.hoopCarpool.movies.model.Movie
 import com.hoopCarpool.movies.model.ResponsePopularMovies
+import com.hoopCarpool.movies.model.ResponseSearchByTitle
 import com.hoopCarpool.movies.util.Constants
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -38,5 +39,12 @@ interface ApiService {
         @Header("Authorization") authorization: String = "Bearer ${Constants.TOKEN_API_KEY}",
         @Path("id") id: String
     ): Response<Movie>
+
+    //Necc granted api permissions to use it
+    @GET("3/search/collection")
+    suspend fun searchMovieByName(
+        @Header("Authorization") authorization: String = "Bearer ${Constants.TOKEN_API_KEY}",
+        @Query("query") query: String
+    ): Response<ResponseSearchByTitle>
 }
 
