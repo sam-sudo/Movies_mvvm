@@ -1,12 +1,75 @@
 package com.hoopCarpool.movies.providers.services
 
+import android.content.Context
 import android.util.Log
 import com.hoopCarpool.movies.model.Movie
+import com.hoopCarpool.movies.util.Constants
+import com.hoopCarpool.movies.util.MovieSharedPreferencesHelper
 
-class MoviesProvider {
+class MoviesProvider(private val context: Context) {
 
 
-    suspend fun getMovies(): List<Movie>{
+
+    val apiService: ApiService = RetrofitInstance.retrofit.create(ApiService::class.java)
+    private val movieSharedPreferencesHelper = MovieSharedPreferencesHelper(context)
+
+    suspend fun getPopularMoviesByPage(page : Int): List<Movie> {
+        val response = apiService.getPopularMoviesByPage(page = page)
+        var movieList = response.body()?.results
+        return if (response.isSuccessful) {
+            Log.w("TAG", "response:  ${movieList}", )
+            movieList = movieList?.map { movie ->
+
+                var movieDetail = getMovieDetail(movie.id)
+                Log.w("TAG", "movie:  $movie ", )
+
+                var duration = movieDetail?.duration
+
+                movie.copy(
+                    imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
+                    backdrop_pathUrl = Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path,
+                    duration = duration ?: 0.0
+                )
+
+            }
+
+
+            movieList ?: emptyList()
+        } else {
+            Log.w("TAG", "response.code(): ${response.code()} ", )
+            when (response.code()) {
+                else -> {
+                    emptyList()
+                }
+            }
+        }
+    }
+
+    suspend fun getMovieDetail(id : String): Movie? {
+        val response = apiService.getMovieById(id= id)
+        val movieDetail = response.body()
+        return if (response.isSuccessful) {
+            Log.w("TAG", "movieDetail:  ${movieDetail}", )
+            movieDetail
+        } else {
+            Log.w("TAG", "response.code(): ${response.code()} ", )
+            when (response.code()) {
+                else -> {
+                    null
+                }
+            }
+        }
+    }
+
+    suspend fun isFavorite(id: String): Boolean{
+
+        val favoriteMoviesSet = movieSharedPreferencesHelper.getFavoriteMovies()
+
+        return favoriteMoviesSet.contains(id)
+
+    }
+
+    /*suspend fun getMovies(): List<Movie>{
         var urlTemp = "https://m.media-amazon.com/images/M/MV5BMzI0NmVkMjEtYmY4MS00ZDMxLTlkZmEtMzU4MDQxYTMzMjU2XkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_FMjpg_UX1000_.jpg"
 
         return listOf(
@@ -23,5 +86,5 @@ class MoviesProvider {
             Movie("9","Item 10", "Subtitle 10", urlTemp, 7.4, "2030", "1h 55m", false)
             // ... agregar más elementos según sea necesario
         )
-    }
+    }*/
 }

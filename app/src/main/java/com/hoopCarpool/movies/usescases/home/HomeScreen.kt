@@ -39,17 +39,16 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hoopCarpool.movies.R
 import com.hoopCarpool.movies.navigation.AppScreens
-import com.hoopCarpool.movies.usescases.common.Components.movieDetail.MovieItemList
+import com.hoopCarpool.movies.usescases.common.Components.movieDetail.MovieItemListScreen
 import com.hoopCarpool.movies.usescases.common.Components.SearchScreen
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController){
+fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel){
 
-val viewModel: HomeViewModel = HomeViewModel(LocalContext.current)
-
+    Log.w("TAG", "HomeScreen: ", )
 
     Box(
         modifier = Modifier
@@ -78,7 +77,7 @@ val viewModel: HomeViewModel = HomeViewModel(LocalContext.current)
                 .padding(top = 56.dp)
                 .padding(16.dp)
         ) {
-            ListScreen(viewModel, navController)
+            ListScreen(homeViewModel, navController)
         }
 
         FloatingActionButton(
@@ -106,15 +105,17 @@ val viewModel: HomeViewModel = HomeViewModel(LocalContext.current)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ListScreen(viewModel: HomeViewModel,navController: NavController) {
+
     val movies by viewModel.getMoviesList().observeAsState(emptyList())
     var searchText by remember { mutableStateOf("") }
 
-    val isLoading by viewModel.isLoading.observeAsState(false)
+    val isLoading by viewModel.isLoading.observeAsState(true)
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
 
-    LaunchedEffect(Unit) {
+    /*LaunchedEffect(Unit) {
         viewModel.loadMovies()
-    }
+    }*/
+
     Column {
 
         SearchScreen(){query ->
@@ -124,24 +125,24 @@ fun ListScreen(viewModel: HomeViewModel,navController: NavController) {
         }
         Spacer(modifier = Modifier.height(20.dp))
 
-        SwipeRefresh(
-            state = swipeRefreshState,
-            onRefresh = {
-                viewModel.loadMovies()
-            }) {
-            LazyColumn {
-                items(movies) { movie ->
-                    MovieItemList.ListItemCard(movie = movie, navController)
-                }
-            }
-        }
 
-        /*if (viewModel.getMoviesInmutable().isEmpty()) {
+        if (isLoading) {
             LoadingAnimation()
         } else {
-            // Display the list of movies
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = {
+                    viewModel.loadRandomMovies()
+                    //viewModel.loadMovies()
+                }) {
+                LazyColumn {
+                    items(movies) { movie ->
+                        MovieItemListScreen.ListItemCard(movie = movie, navController)
+                    }
+                }
+            }
 
-        }*/
+        }
     }
 }
 

@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hoopCarpool.movies.R
-import com.hoopCarpool.movies.usescases.common.Components.movieDetail.MovieItemList
+import com.hoopCarpool.movies.usescases.common.Components.movieDetail.MovieItemListScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +114,7 @@ fun FavoriteListScreen(viewModel: FavoriteViewModel, navController: NavControlle
         }else{
             LazyColumn {
                 items(favoriteMovies) { movie ->
-                    MovieItemList.ListItemCard(movie = movie, navController)
+                    MovieItemListScreen.ListItemCard(movie = movie, navController)
                 }
             }
         }
