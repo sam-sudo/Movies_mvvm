@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,14 +32,16 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.hoopCarpool.movies.R
 import com.hoopCarpool.movies.model.Movie
 import com.hoopCarpool.movies.navigation.AppScreens
+import com.hoopCarpool.movies.util.MovieSharedPreferencesHelper
 
-class MovieItemList {
+class MovieItemListScreen {
 
 
     companion object{
@@ -50,13 +53,14 @@ class MovieItemList {
                 data = movie.imageUrl,
                 builder = {
                     crossfade(true)
+                    allowHardware(false)
                     error(
                         R.drawable.ic_no_image
                     )
+
                 }
             )
             val painterState = painter.state
-
 
             Row(
                 modifier = Modifier
@@ -64,8 +68,8 @@ class MovieItemList {
                     .size(200.dp)
                     .padding(16.dp)
                     .clickable {
-                        Log.w("TAG", "ListItemCard detail ", )
-                        navController.navigate(route = AppScreens.MovieDetailScreen.route +"/"+ movie.id)
+                        Log.w("TAG", "ListItemCard detail ",)
+                        navController.navigate(route = AppScreens.MovieDetailScreen.route + "/" + movie.id)
                     }
 
             ) {
@@ -91,11 +95,11 @@ class MovieItemList {
                     ){
                         Text(
                             text = movie.title,
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = colorResource(R.color.primaryTextColor)
+                            color = colorResource(R.color.primaryTextColor),
+                            fontSize = 15.sp
                         )
 
-                        Spacer(modifier = Modifier.width(30.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
                         Row {
                             Icon(
@@ -108,21 +112,24 @@ class MovieItemList {
 
                             Spacer(modifier = Modifier.width(16.dp))
                             Text(
-                                text = movie.stars.toString(),
+                                text = String.format("%.1f", movie.stars),
+
                                 style = MaterialTheme.typography.bodySmall,
                                 color = colorResource(R.color.primaryTextColor)
                             )
 
                             Spacer(modifier = Modifier.width(16.dp))
+                            var year = movie.date.split("-")[0]
                             Text(
-                                text = movie.year,
+                                text = year ,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = colorResource(R.color.primaryTextColor)
                             )
 
                             Spacer(modifier = Modifier.width(16.dp))
+
                             Text(
-                                text = movie.duration,
+                                text = String.format("%.1f", movie.duration),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = colorResource(R.color.primaryTextColor)
                             )

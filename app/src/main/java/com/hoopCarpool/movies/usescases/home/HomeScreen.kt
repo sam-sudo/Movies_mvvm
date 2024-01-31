@@ -39,16 +39,14 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hoopCarpool.movies.R
 import com.hoopCarpool.movies.navigation.AppScreens
-import com.hoopCarpool.movies.usescases.common.Components.movieDetail.MovieItemList
+import com.hoopCarpool.movies.usescases.common.Components.movieDetail.MovieItemListScreen
 import com.hoopCarpool.movies.usescases.common.Components.SearchScreen
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController){
-
-val viewModel: HomeViewModel = HomeViewModel(LocalContext.current)
+fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel){
 
 
     Box(
@@ -78,7 +76,7 @@ val viewModel: HomeViewModel = HomeViewModel(LocalContext.current)
                 .padding(top = 56.dp)
                 .padding(16.dp)
         ) {
-            ListScreen(viewModel, navController)
+            ListScreen(homeViewModel, navController)
         }
 
         FloatingActionButton(
@@ -106,6 +104,7 @@ val viewModel: HomeViewModel = HomeViewModel(LocalContext.current)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ListScreen(viewModel: HomeViewModel,navController: NavController) {
+
     val movies by viewModel.getMoviesList().observeAsState(emptyList())
     var searchText by remember { mutableStateOf("") }
 
@@ -131,7 +130,7 @@ fun ListScreen(viewModel: HomeViewModel,navController: NavController) {
             }) {
             LazyColumn {
                 items(movies) { movie ->
-                    MovieItemList.ListItemCard(movie = movie, navController)
+                    MovieItemListScreen.ListItemCard(movie = movie, navController)
                 }
             }
         }

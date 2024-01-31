@@ -1,27 +1,23 @@
 package com.hoopCarpool.movies.usescases.favoritesMovies
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.hoopCarpool.movies.model.Movie
 import com.hoopCarpool.movies.providers.services.MoviesProvider
+import com.hoopCarpool.movies.util.Constants
 import com.hoopCarpool.movies.util.MovieSharedPreferencesHelper
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class FavoriteViewModel(private val context: Context): ViewModel() {
 
     private val movieSharedPreferencesHelper = MovieSharedPreferencesHelper(context)
 
-    var movieProvider = MoviesProvider()
+    var movieProvider = MoviesProvider(context)
 
 
     private val _favoriteMovies = MutableLiveData<List<Movie>>(emptyList())
@@ -80,7 +76,17 @@ class FavoriteViewModel(private val context: Context): ViewModel() {
 
     fun loadFavoriteMovies() {
         viewModelScope.launch (Dispatchers.Main){
-            val moviesSet = movieProvider.getMovies()
+            var moviesSet = movieProvider.getPopularMoviesByPage(1)
+
+            moviesSet = moviesSet.map { movie ->
+                movie.copy(
+                    imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
+                    backdrop_pathUrl = Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path
+                )
+
+            }
+
+
             val favoriteMoviesSet = movieSharedPreferencesHelper.getFavoriteMovies()
             val favoriteList = ArrayList<Movie>()
 

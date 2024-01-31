@@ -8,12 +8,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hoopCarpool.movies.model.Movie
 import com.hoopCarpool.movies.providers.services.MoviesProvider
+import com.hoopCarpool.movies.util.Constants
 import com.hoopCarpool.movies.util.MovieSharedPreferencesHelper
 import kotlinx.coroutines.launch
 
 class HomeViewModel(private val context: Context) : ViewModel() {
 
-    var movieProvider = MoviesProvider()
+    var movieProvider = MoviesProvider( context)
 
     private val _movies = MutableLiveData<List<Movie>>()
     val movies: LiveData<List<Movie>> get() = _movies
@@ -73,10 +74,22 @@ class HomeViewModel(private val context: Context) : ViewModel() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                var movies = movieProvider.getMovies()
+                var movies = movieProvider.getPopularMoviesByPage(1)
+
+                Log.w("TAG", "loadMovies: $movies", )
+
+
+
+                movies = movies.map { movie ->
+                    movie.copy(
+                        imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
+                        backdrop_pathUrl =Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path
+                    )
+
+                }
 
                 var moviesWitFavorites = checkFavoritesMovies(movies)
-
+                Log.w("TAG", "moviesWitFavorites: $moviesWitFavorites ", )
                 _isLoading.value = false
 
                 _movies.value = moviesWitFavorites
