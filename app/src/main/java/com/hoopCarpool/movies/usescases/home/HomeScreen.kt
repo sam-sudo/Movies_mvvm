@@ -123,24 +123,23 @@ fun ListScreen(viewModel: HomeViewModel,navController: NavController) {
         }
         Spacer(modifier = Modifier.height(20.dp))
 
-        SwipeRefresh(
-            state = swipeRefreshState,
-            onRefresh = {
-                viewModel.loadMovies()
-            }) {
-            LazyColumn {
-                items(movies) { movie ->
-                    MovieItemListScreen.ListItemCard(movie = movie, navController)
-                }
-            }
-        }
 
-        /*if (viewModel.getMoviesInmutable().isEmpty()) {
+        if (isLoading) {
             LoadingAnimation()
         } else {
-            // Display the list of movies
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = {
+                    viewModel.loadMovies()
+                }) {
+                LazyColumn {
+                    items(movies) { movie ->
+                        MovieItemListScreen.ListItemCard(movie = movie, navController)
+                    }
+                }
+            }
 
-        }*/
+        }
     }
 }
 
