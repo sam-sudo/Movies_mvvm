@@ -48,6 +48,7 @@ import com.hoopCarpool.movies.usescases.common.Components.SearchScreen
 @Composable
 fun HomeScreen(navController: NavController,homeViewModel: HomeViewModel){
 
+    Log.w("TAG", "HomeScreen: ", )
 
     Box(
         modifier = Modifier
@@ -108,12 +109,13 @@ fun ListScreen(viewModel: HomeViewModel,navController: NavController) {
     val movies by viewModel.getMoviesList().observeAsState(emptyList())
     var searchText by remember { mutableStateOf("") }
 
-    val isLoading by viewModel.isLoading.observeAsState(false)
+    val isLoading by viewModel.isLoading.observeAsState(true)
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
 
-    LaunchedEffect(Unit) {
+    /*LaunchedEffect(Unit) {
         viewModel.loadMovies()
-    }
+    }*/
+
     Column {
 
         SearchScreen(){query ->
@@ -130,6 +132,7 @@ fun ListScreen(viewModel: HomeViewModel,navController: NavController) {
             SwipeRefresh(
                 state = swipeRefreshState,
                 onRefresh = {
+                    //viewModel.loadRandomMovies()
                     viewModel.loadMovies()
                 }) {
                 LazyColumn {

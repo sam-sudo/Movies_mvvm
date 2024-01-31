@@ -76,15 +76,7 @@ fun MovieDetailScreen(
     }
 
     if (isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
+        LoadingAnimation()
     }
     else {
         Log.w("TAG", "MovieDetailScreen: $movieItem", )
@@ -234,7 +226,18 @@ fun MovieDetailScreen(
     }
 
 }
-
+@Composable
+fun LoadingAnimation(){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
 /*@Composable
 @Preview
 fun preview(){

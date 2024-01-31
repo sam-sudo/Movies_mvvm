@@ -10,7 +10,9 @@ import com.hoopCarpool.movies.model.Movie
 import com.hoopCarpool.movies.providers.services.MoviesProvider
 import com.hoopCarpool.movies.util.Constants
 import com.hoopCarpool.movies.util.MovieSharedPreferencesHelper
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class HomeViewModel(private val context: Context) : ViewModel() {
 
@@ -21,10 +23,14 @@ class HomeViewModel(private val context: Context) : ViewModel() {
 
     private var moviesInmutable = listOf<Movie>()
 
-    private val _isLoading = MutableLiveData<Boolean>(false)
+    private val _isLoading = MutableLiveData<Boolean>()
     val isLoading = _isLoading
 
     val movieSharedPreferencesHelper = MovieSharedPreferencesHelper(context)
+
+    private var previousNumber: Int? = null
+
+
     init {
         loadMovies()
     }
@@ -71,9 +77,10 @@ class HomeViewModel(private val context: Context) : ViewModel() {
         _movies.postValue(newMovies)
         movies = ArrayList(newMovies)*/
 
+        _isLoading.value = true
         viewModelScope.launch {
             try {
-                _isLoading.value = true
+
                 var movies = movieProvider.getPopularMoviesByPage(1)
 
                 Log.w("TAG", "loadMovies: $movies", )
@@ -91,8 +98,9 @@ class HomeViewModel(private val context: Context) : ViewModel() {
                 var moviesWitFavorites = checkFavoritesMovies(movies)
                 Log.w("TAG", "moviesWitFavorites: $moviesWitFavorites ", )
                 _isLoading.value = false
-
-                _movies.value = moviesWitFavorites
+                if (_movies.value != moviesWitFavorites) {
+                    _movies.value = moviesWitFavorites
+                }
                 moviesInmutable = moviesWitFavorites
             }catch (e: Exception){
                 Log.e("TAG", "loadMovies exeption ${e.message} ", )
@@ -101,6 +109,55 @@ class HomeViewModel(private val context: Context) : ViewModel() {
 
     }
 
+    fun loadRandomMovies(){
+        var randomPage = getRandomNumber()
+        Log.w("tag", "getRandomNumber: ${getRandomNumber()}", )
+
+        _isLoading.value = true
+
+        viewModelScope.launch {
+            try {
+
+                var movies = movieProvider.getPopularMoviesByPage(randomPage)
+
+                Log.w("TAG", "loadMovies: $movies", )
+
+
+
+                /*movies = movies.map { movie ->
+                    movie.copy(
+                        imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
+                        backdrop_pathUrl =Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path
+                    )
+
+                }*/
+
+                var moviesWitFavorites = checkFavoritesMovies(movies)
+                Log.w("TAG", "moviesWitFavorites: $moviesWitFavorites ", )
+
+                //delay(3000)
+                //_movies.value = moviesWitFavorites
+                if (_movies.value != moviesWitFavorites) {
+                    _movies.value = moviesWitFavorites
+                }
+                _isLoading.value = false
+                moviesInmutable = moviesWitFavorites
+            }catch (e: Exception){
+                Log.e("TAG", "loadMovies exeption ${e.message} ", )
+            }
+        }
+
+    }
+
+    fun getRandomNumber(): Int {
+        var randomNumber: Int
+        do {
+            randomNumber = (1..10).random()
+        } while (randomNumber == previousNumber)
+
+        previousNumber = randomNumber
+        return randomNumber
+    }
 
     /*fun getRandomMovie(): Movie{
         return MoviesProvider.random()
