@@ -21,12 +21,12 @@ class HomeViewModel(private val context: Context) : ViewModel() {
     private val _movies = MutableLiveData<List<Movie>>()
     val movies: LiveData<List<Movie>> get() = _movies
 
-    private var moviesInmutable = listOf<Movie>()
+    var moviesInmutable = listOf<Movie>()
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading = _isLoading
 
-    val movieSharedPreferencesHelper = MovieSharedPreferencesHelper(context)
+    var movieSharedPreferencesHelper = MovieSharedPreferencesHelper(context)
 
     private var previousNumber: Int? = null
 
@@ -37,9 +37,9 @@ class HomeViewModel(private val context: Context) : ViewModel() {
     fun getMoviesList(): LiveData<List<Movie>> {
         return movies
     }
-    fun getMoviesInmutable(): List<Movie> {
+    /*fun getMoviesInmutable(): List<Movie> {
         return moviesInmutable
-    }
+    }*/
 
 
     suspend fun checkFavoritesMovies(movies: List<Movie>): List<Movie> {
