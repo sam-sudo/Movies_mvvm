@@ -6,6 +6,9 @@
   <img src="https://github.com/sam-sudo/Movies_mvvm/assets/57421143/8c5dc8c0-5e19-4b08-83d3-3372e3f5c4b4" alt="Vista previa de la aplicación" height="400" />
 </p>
 
+> [!NOTE]  
+> In feature/searchBar branch there are changes to use api to search by title, but need granted api permissions.
+
 ## Goal
 
 The goal of this project is to create a movie viewer application using Kotlin and following the MVVM architecture. Users should be able to view a list of movies, access detailed information for each movie, and perform various actions.
