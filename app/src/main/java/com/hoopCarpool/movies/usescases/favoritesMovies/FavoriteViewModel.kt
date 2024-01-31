@@ -76,15 +76,8 @@ class FavoriteViewModel(private val context: Context): ViewModel() {
 
     fun loadFavoriteMovies() {
         viewModelScope.launch (Dispatchers.Main){
-            var moviesSet = movieProvider.getPopularMoviesByPage(1)
+            //var moviesSet = movieProvider.getPopularMoviesByPage(1)
 
-            moviesSet = moviesSet.map { movie ->
-                movie.copy(
-                    imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
-                    backdrop_pathUrl = Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path
-                )
-
-            }
 
 
             val favoriteMoviesSet = movieSharedPreferencesHelper.getFavoriteMovies()
@@ -92,12 +85,21 @@ class FavoriteViewModel(private val context: Context): ViewModel() {
 
             Log.w("TAG", "loadFavoriteMovies: $favoriteMoviesSet", )
             favoriteMoviesSet.forEach{movieId ->
-                moviesSet.forEach {movie ->
-                    if(movie.id == movieId){
-                        movie.favorite = true
-                        favoriteList.add(movie)
-                    }
+
+                var movie = movieProvider.getMovieDetail(movieId)
+                Log.w("TAG", "loadFavoriteMovies: before favorite $movie", )
+
+                movie = movie?.copy(
+                    imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
+                    backdrop_pathUrl = Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path,
+                    favorite = true
+                )
+                if (movie != null) {
+                    favoriteList.add(movie)
                 }
+
+                Log.w("TAG", "loadFavoriteMovies: favorite $movie", )
+
             }
 
             favoriteMoviesArrayList = favoriteList

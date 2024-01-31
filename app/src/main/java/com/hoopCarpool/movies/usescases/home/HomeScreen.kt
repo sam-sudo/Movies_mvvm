@@ -132,8 +132,8 @@ fun ListScreen(viewModel: HomeViewModel,navController: NavController) {
             SwipeRefresh(
                 state = swipeRefreshState,
                 onRefresh = {
-                    //viewModel.loadRandomMovies()
-                    viewModel.loadMovies()
+                    viewModel.loadRandomMovies()
+                    //viewModel.loadMovies()
                 }) {
                 LazyColumn {
                     items(movies) { movie ->
