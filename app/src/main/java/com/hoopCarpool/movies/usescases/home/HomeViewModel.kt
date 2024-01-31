@@ -80,13 +80,13 @@ class HomeViewModel(private val context: Context) : ViewModel() {
 
 
 
-                movies = movies.map { movie ->
+                /*movies = movies.map { movie ->
                     movie.copy(
                         imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
                         backdrop_pathUrl =Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path
                     )
 
-                }
+                }*/
 
                 var moviesWitFavorites = checkFavoritesMovies(movies)
                 Log.w("TAG", "moviesWitFavorites: $moviesWitFavorites ", )
