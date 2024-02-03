@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -28,14 +30,10 @@ android {
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
-    viewBinding {
-        enable = true
+        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -43,7 +41,7 @@ android {
     }
 
     composeOptions{
-        kotlinCompilerExtensionVersion = "1.4.2"
+        kotlinCompilerExtensionVersion = "1.4.3"
     }
 }
 
@@ -64,7 +62,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
-    implementation ("androidx.compose.runtime:runtime-livedata:1.1.0")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.6.0")
 
     // Android Studio Preview support
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -80,11 +78,22 @@ dependencies {
     implementation ("androidx.navigation:navigation-compose:2.7.6")
 
     //Gson
-    implementation ("com.google.code.gson:gson:2.8.8")
+    implementation ("com.google.code.gson:gson:2.8.9")
     //datastore
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
     //Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //Either
+    implementation("io.arrow-kt:arrow-core:1.2.0")
+    implementation("io.arrow-kt:arrow-fx-coroutines:1.2.0")
+
+    //Dagger Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.7.0")
 }

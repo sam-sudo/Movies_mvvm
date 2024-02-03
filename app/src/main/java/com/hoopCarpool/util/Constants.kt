@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.util
+package com.hoopCarpool.util
 
 object Constants {
 

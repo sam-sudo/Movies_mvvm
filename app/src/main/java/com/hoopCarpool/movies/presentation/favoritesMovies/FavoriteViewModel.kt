@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.usescases.favoritesMovies
+package com.hoopCarpool.movies.presentation.favoritesMovies
 
 import android.content.Context
 import android.util.Log
@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hoopCarpool.movies.model.Movie
+import com.hoopCarpool.movies.domain.model.Movie
 import com.hoopCarpool.movies.providers.services.MoviesProvider
-import com.hoopCarpool.movies.util.Constants
-import com.hoopCarpool.movies.util.MovieSharedPreferencesHelper
+import com.hoopCarpool.util.Constants
+import com.hoopCarpool.movies.presentation.util.MovieSharedPreferencesHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

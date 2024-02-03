@@ -1,7 +1,6 @@
-package com.hoopCarpool.movies.model
+package com.hoopCarpool.movies.domain.model
 
 import com.google.gson.annotations.SerializedName
-import com.hoopCarpool.movies.util.Constants
 
 data class Movie(
     val id: String,

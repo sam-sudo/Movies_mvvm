@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.model
+package com.hoopCarpool.movies.domain.model
 
 
 import com.google.gson.annotations.SerializedName

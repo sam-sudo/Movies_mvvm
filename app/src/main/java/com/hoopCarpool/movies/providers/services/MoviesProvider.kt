@@ -2,15 +2,16 @@ package com.hoopCarpool.movies.providers.services
 
 import android.content.Context
 import android.util.Log
-import com.hoopCarpool.movies.model.Movie
-import com.hoopCarpool.movies.util.Constants
-import com.hoopCarpool.movies.util.MovieSharedPreferencesHelper
+import com.hoopCarpool.movies.data.remote.MoviesApi
+import com.hoopCarpool.movies.domain.model.Movie
+import com.hoopCarpool.util.Constants
+import com.hoopCarpool.movies.presentation.util.MovieSharedPreferencesHelper
 
 class MoviesProvider(private val context: Context) {
 
 
 
-    val apiService: ApiService = RetrofitInstance.retrofit.create(ApiService::class.java)
+    val apiService: MoviesApi = RetrofitInstance.retrofit.create(MoviesApi::class.java)
     private val movieSharedPreferencesHelper = MovieSharedPreferencesHelper(context)
 
     suspend fun getPopularMoviesByPage(page : Int): List<Movie> {

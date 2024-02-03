@@ -1,11 +1,11 @@
-package com.hoopCarpool.movies.util
+package com.hoopCarpool.movies.presentation.util
 
 import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.core.*
-import com.hoopCarpool.movies.model.Movie
+import com.hoopCarpool.movies.domain.model.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow

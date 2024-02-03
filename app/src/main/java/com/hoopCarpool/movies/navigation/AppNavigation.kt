@@ -2,23 +2,24 @@ package com.hoopCarpool.movies.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.hoopCarpool.movies.usescases.favoritesMovies.FavoriteMoviesScreen
-import com.hoopCarpool.movies.usescases.favoritesMovies.FavoriteViewModel
-import com.hoopCarpool.movies.usescases.home.HomeScreen
-import com.hoopCarpool.movies.usescases.home.HomeViewModel
-import com.hoopCarpool.movies.usescases.common.Components.movieDetail.MovieDetailScreen
-import com.hoopCarpool.movies.usescases.common.Components.movieDetail.MovieDetailViewModel
+import com.hoopCarpool.movies.presentation.favoritesMovies.FavoriteMoviesScreen
+import com.hoopCarpool.movies.presentation.favoritesMovies.FavoriteViewModel
+import com.hoopCarpool.movies.presentation.Movies_screen.HomeScreen
+import com.hoopCarpool.movies.presentation.Movies_screen.HomeViewModel
+import com.hoopCarpool.movies.presentation.Movies_screen.movieDetail.MovieDetailScreen
+import com.hoopCarpool.movies.presentation.Movies_screen.movieDetail.MovieDetailViewModel
 
 @Composable
 fun AppNavigation(){
     val navController = rememberNavController()
 
-    val homeViewModel: HomeViewModel = HomeViewModel(LocalContext.current)
+    val homeViewModel: HomeViewModel = hiltViewModel()
     val movieDetailViewModel: MovieDetailViewModel = MovieDetailViewModel(LocalContext.current)
     var favoriteViewModel : FavoriteViewModel = FavoriteViewModel(LocalContext.current)
 

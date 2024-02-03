@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.usescases.common.Components.movieDetail
+package com.hoopCarpool.movies.presentation.Movies_screen.movieDetail
 
 import android.content.Context
 import android.util.Log
@@ -6,11 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hoopCarpool.movies.model.Movie
+import com.hoopCarpool.movies.domain.model.Movie
 import com.hoopCarpool.movies.providers.services.MoviesProvider
-import com.hoopCarpool.movies.util.Constants
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.hoopCarpool.util.Constants
 import kotlinx.coroutines.launch
 
 class MovieDetailViewModel(private val context: Context) :ViewModel(){

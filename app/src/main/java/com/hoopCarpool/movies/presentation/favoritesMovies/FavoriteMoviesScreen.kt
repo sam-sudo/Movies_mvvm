@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.usescases.favoritesMovies
+package com.hoopCarpool.movies.presentation.favoritesMovies
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hoopCarpool.movies.R
-import com.hoopCarpool.movies.usescases.common.Components.movieDetail.MovieItemListScreen
+import com.hoopCarpool.movies.presentation.Movies_screen.components.MovieListCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +114,7 @@ fun FavoriteListScreen(viewModel: FavoriteViewModel, navController: NavControlle
         }else{
             LazyColumn {
                 items(favoriteMovies) { movie ->
-                    MovieItemListScreen.ListItemCard(movie = movie, navController)
+                    MovieListCard(movie = movie, navController)
                 }
             }
         }
