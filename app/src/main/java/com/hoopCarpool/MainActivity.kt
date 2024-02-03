@@ -11,7 +11,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.hoopCarpool.movies.R
-import com.hoopCarpool.movies.navigation.AppNavigation
+import com.hoopCarpool.movies.presentation.navigation.AppNavigation
 import com.hoopCarpool.util.Event
 import com.hoopCarpool.util.EventBus
 import dagger.hilt.android.AndroidEntryPoint

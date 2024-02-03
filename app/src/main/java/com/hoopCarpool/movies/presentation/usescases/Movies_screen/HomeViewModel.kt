@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.presentation.Movies_screen
+package com.hoopCarpool.movies.presentation.usescases.Movies_screen
 
 import android.content.Context
 import android.util.Log
@@ -236,8 +236,8 @@ class HomeViewModel @Inject constructor(
                             var duration = movieDetail?.duration
 
                             movie.copy(
-                                imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
-                                backdrop_pathUrl = Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path,
+                                imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath ?: "",
+                                backdrop_pathUrl = Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path ?: "",
                                 duration = duration ?: 0.0
                             )
 

@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.presentation.Movies_screen.movieDetail
+package com.hoopCarpool.movies.presentation.usescases.Movies_screen.movieDetail
 
 import android.content.Context
 import android.util.Log

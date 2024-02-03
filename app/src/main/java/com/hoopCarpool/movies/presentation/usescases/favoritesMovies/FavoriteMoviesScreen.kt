@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.presentation.favoritesMovies
+package com.hoopCarpool.movies.presentation.usescases.favoritesMovies
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -32,14 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hoopCarpool.movies.R
-import com.hoopCarpool.movies.presentation.Movies_screen.components.MovieListCard
+import com.hoopCarpool.movies.presentation.usescases.Movies_screen.components.MovieListCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteMoviesScreen( navController: NavController,  viewModel: FavoriteViewModel){
-    val context = LocalContext.current
-
-
 
     Box(
         modifier = Modifier

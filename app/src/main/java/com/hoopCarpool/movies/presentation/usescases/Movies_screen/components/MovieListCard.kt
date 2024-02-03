@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.presentation.Movies_screen.components
+package com.hoopCarpool.movies.presentation.usescases.Movies_screen.components
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -41,7 +41,9 @@ import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.hoopCarpool.movies.R
 import com.hoopCarpool.movies.domain.model.Movie
-import com.hoopCarpool.movies.navigation.AppScreens
+import com.hoopCarpool.movies.presentation.navigation.AppScreens
+import com.hoopCarpool.movies.presentation.usescases.Movies_screen.movieDetail.LoadingAnimation
+import kotlinx.coroutines.delay
 
 @Composable
 fun MovieListCard(movie : Movie, navController: NavController) {
@@ -75,6 +77,7 @@ fun MovieListCard(movie : Movie, navController: NavController) {
     ) {
 
         if (painterState is ImagePainter.State.Loading) {
+            LoadingAnimation()
 
         } else {
             Row (

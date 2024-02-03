@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.presentation.Movies_screen.movieDetail
+package com.hoopCarpool.movies.presentation.usescases.Movies_screen.movieDetail
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -38,8 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.hoopCarpool.movies.R
-import com.hoopCarpool.movies.presentation.favoritesMovies.FavoriteViewModel
-import com.hoopCarpool.movies.presentation.Movies_screen.HomeViewModel
+import com.hoopCarpool.movies.presentation.usescases.favoritesMovies.FavoriteViewModel
+import com.hoopCarpool.movies.presentation.usescases.Movies_screen.HomeViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -225,7 +225,7 @@ fun LoadingAnimation(){
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(colorResource(id = R.color.primaryBackground))
     ) {
         CircularProgressIndicator(
             modifier = Modifier.align(Alignment.Center)

@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.presentation.Movies_screen
+package com.hoopCarpool.movies.presentation.usescases.Movies_screen
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -39,8 +40,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hoopCarpool.movies.R
 import com.hoopCarpool.movies.domain.repository.MoviesRepository
-import com.hoopCarpool.movies.navigation.AppScreens
-import com.hoopCarpool.movies.presentation.Movies_screen.components.MovieListCard
+import com.hoopCarpool.movies.presentation.navigation.AppScreens
+import com.hoopCarpool.movies.presentation.usescases.Movies_screen.components.MovieListCard
 import com.hoopCarpool.movies.presentation.util.components.LoadingAnimation
 import com.hoopCarpool.movies.presentation.util.components.MyTopBar
 import com.hoopCarpool.movies.presentation.util.components.SearchScreen
@@ -65,9 +66,11 @@ fun HomeScreen(
 @Composable
 fun MoviesContent(navController: NavController,
                   homeViewModel: HomeViewModel,
-                  state: MoviesViewState) {
+                  state: MoviesViewState
+) {
 
-    LoadingAnimation(state.isLoading)
+    Log.w("TAG", "MoviesContent: " +state.isLoading )
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -98,6 +101,7 @@ fun MoviesContent(navController: NavController,
                 .background(colorResource(id = R.color.primaryBackground))
         ) {
             Spacer(modifier = Modifier.height(70.dp))
+            LoadingAnimation(state.isLoading && state.movies.isNullOrEmpty())
            ListScreen(state, homeViewModel, navController)
         }
 
@@ -109,13 +113,13 @@ fun MoviesContent(navController: NavController,
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ListScreen(state: MoviesViewState,viewModel: HomeViewModel, navController: NavController) {
+fun ListScreen(state: MoviesViewState, viewModel: HomeViewModel, navController: NavController) {
 
     /*val movies by viewModel.getMoviesList().observeAsState(emptyList())*/
     var searchText by remember { mutableStateOf("") }
 
     //val isLoading by viewModel.isLoading.observeAsState(true)
-    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = state.isLoading)
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = state.isLoading && !state.movies.isNullOrEmpty())
 
     /*LaunchedEffect(Unit) {
         viewModel.loadMovies()

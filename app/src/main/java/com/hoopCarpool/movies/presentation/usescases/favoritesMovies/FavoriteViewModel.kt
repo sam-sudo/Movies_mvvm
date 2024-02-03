@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.presentation.favoritesMovies
+package com.hoopCarpool.movies.presentation.usescases.favoritesMovies
 
 import android.content.Context
 import android.util.Log

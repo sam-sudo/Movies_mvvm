@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.navigation
+package com.hoopCarpool.movies.presentation.navigation
 
 sealed class AppScreens(val route: String){
 

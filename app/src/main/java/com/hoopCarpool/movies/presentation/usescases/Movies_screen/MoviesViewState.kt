@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.presentation.Movies_screen
+package com.hoopCarpool.movies.presentation.usescases.Movies_screen
 
 import com.hoopCarpool.movies.domain.model.Movie
 

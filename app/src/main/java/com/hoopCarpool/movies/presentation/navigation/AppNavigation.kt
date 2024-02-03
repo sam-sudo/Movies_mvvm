@@ -1,4 +1,4 @@
-package com.hoopCarpool.movies.navigation
+package com.hoopCarpool.movies.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -8,12 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.hoopCarpool.movies.presentation.favoritesMovies.FavoriteMoviesScreen
-import com.hoopCarpool.movies.presentation.favoritesMovies.FavoriteViewModel
-import com.hoopCarpool.movies.presentation.Movies_screen.HomeScreen
-import com.hoopCarpool.movies.presentation.Movies_screen.HomeViewModel
-import com.hoopCarpool.movies.presentation.Movies_screen.movieDetail.MovieDetailScreen
-import com.hoopCarpool.movies.presentation.Movies_screen.movieDetail.MovieDetailViewModel
+import com.hoopCarpool.movies.presentation.usescases.favoritesMovies.FavoriteMoviesScreen
+import com.hoopCarpool.movies.presentation.usescases.favoritesMovies.FavoriteViewModel
+import com.hoopCarpool.movies.presentation.usescases.Movies_screen.HomeScreen
+import com.hoopCarpool.movies.presentation.usescases.Movies_screen.HomeViewModel
+import com.hoopCarpool.movies.presentation.usescases.Movies_screen.movieDetail.MovieDetailScreen
+import com.hoopCarpool.movies.presentation.usescases.Movies_screen.movieDetail.MovieDetailViewModel
 
 @Composable
 fun AppNavigation(){
