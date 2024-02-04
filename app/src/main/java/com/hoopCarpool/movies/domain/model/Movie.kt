@@ -7,10 +7,10 @@ data class Movie(
     val title: String,
     val overview: String,
     @SerializedName("poster_path")
-    val imagePath: String,
+    val imagePath: String? ="",
     var imageUrl: String,
     @SerializedName("backdrop_path")
-    val backdrop_path: String,
+    val backdrop_path: String? = "",
     var backdrop_pathUrl: String,
     @SerializedName("vote_average")
     val stars: Double,
