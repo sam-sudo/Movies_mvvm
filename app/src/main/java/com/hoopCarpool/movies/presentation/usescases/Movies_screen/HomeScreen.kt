@@ -101,8 +101,8 @@ fun MoviesContent(navController: NavController,
                 .background(colorResource(id = R.color.primaryBackground))
         ) {
             Spacer(modifier = Modifier.height(70.dp))
+            ListScreen(state, homeViewModel, navController)
             LoadingAnimation(state.isLoading && state.movies.isNullOrEmpty())
-           ListScreen(state, homeViewModel, navController)
         }
 
 
