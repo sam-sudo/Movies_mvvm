@@ -20,8 +20,8 @@ fun AppNavigation(){
     val navController = rememberNavController()
 
     val homeViewModel: HomeViewModel = hiltViewModel()
-    val movieDetailViewModel: MovieDetailViewModel = MovieDetailViewModel(LocalContext.current)
-    var favoriteViewModel : FavoriteViewModel = FavoriteViewModel(LocalContext.current)
+    val movieDetailViewModel: MovieDetailViewModel = hiltViewModel()
+    var favoriteViewModel : FavoriteViewModel = hiltViewModel()
 
 
     NavHost(navController = navController, startDestination = AppScreens.HomeScreen.route){

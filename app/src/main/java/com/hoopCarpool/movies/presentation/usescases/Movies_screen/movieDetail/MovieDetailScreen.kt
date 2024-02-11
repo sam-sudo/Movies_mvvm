@@ -35,6 +35,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.hoopCarpool.movies.R
@@ -50,17 +52,12 @@ import com.hoopCarpool.movies.presentation.usescases.Movies_screen.HomeViewModel
 fun MovieDetailScreen(
     navController: NavController,
     movieId: String,
-    homeViewModel: HomeViewModel,
+    homeViewModel: HomeViewModel = hiltViewModel(),
     favoriteViewModel: FavoriteViewModel,
-    movieDetailViewModel: MovieDetailViewModel
+    movieDetailViewModel: MovieDetailViewModel = hiltViewModel()
 ){
 
-
-
-    val movieItem by movieDetailViewModel.movieItem.observeAsState()
-    val favoriteStatus by movieDetailViewModel.favoriteStatus.observeAsState(initial = false)
-    val isLoading by movieDetailViewModel.isLoading.observeAsState(true)
-
+    val state by movieDetailViewModel.state.collectAsStateWithLifecycle()
 
 
     //movieDetailViewModel.loadDetailData(movieId, LocalContext.current)
@@ -69,157 +66,188 @@ fun MovieDetailScreen(
         movieDetailViewModel.loadDetailData(movieId)
     }
 
-    if (isLoading) {
+    if (state.isLoading) {
         LoadingAnimation()
     }
     else {
-        Log.w("TAG", "MovieDetailScreen: $movieItem", )
-        val painterBackdrop = rememberImagePainter(
-            data = movieItem!!.backdrop_pathUrl,
-            builder = {
-                crossfade(true)
-                error(
-                    R.drawable.ic_no_image
-                )
 
-            }
-        )
-
-        val painter = rememberImagePainter(
-            data = movieItem!!.imageUrl,
-            builder = {
-                crossfade(true)
-                error(
-                    R.drawable.ic_no_image
-                )
-
-            }
-        )
-
-
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-        ) {
-
-            Image(
-                painter = painterBackdrop,
-                contentDescription = "Image item detail",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-            )
-
-            Column (
-                modifier = Modifier
-                    .fillMaxSize()
-            ){
-
-                TopAppBar(
-                    title = {
-                    },
-                    colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = Color.Transparent
-                    ),
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                navController.popBackStack()
-                            }) {
-                            Icon(imageVector = Icons.Default.ArrowBack, "backButton", tint = Color.White)
-                        }
-                    }
-                )
-
-
-
-                Spacer(modifier = Modifier.height(200.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    Row (
-                        Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
-
-                    ){
-                        Image(
-                            painter = painter,
-                            contentDescription = "Image 2 item detail",
-                            modifier = Modifier
-                                .size(200.dp, 200.dp)
-                        )
-                        Text(
-                            text = movieItem!!.overview,
-                            color = colorResource(id = R.color.primaryTextColor),
-                            modifier = Modifier
-                                .padding(end = 10.dp)
-                        )
-                    }
-                }
-
-            }
-            FloatingActionButton(
-                onClick = {
-                    if (!favoriteStatus){
-                        favoriteViewModel.addToFavorites(movieItem!!)
-                        movieItem!!.favorite = true
-                        movieDetailViewModel.favoriteStatus.postValue(true)
-                        homeViewModel.updateMovie(movieItem!!)
-                    }else{
-                        movieItem!!.favorite = false
-                        movieDetailViewModel.favoriteStatus.postValue(false)
-                        favoriteViewModel.removeFromFavorites(movieItem!!)
-                        homeViewModel.updateMovie(movieItem!!)
-                    }
-
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp),
-                containerColor = if (!favoriteStatus) {
-                    colorResource(id = R.color.primaryButtonColor)
-                } else {
-                    Color.Red
-                }
-            ) {
-                Row (
-                    Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(10.dp)
-                ){
-                    if(!favoriteStatus){
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            "Add to favorites",
-                            tint = colorResource(id = R.color.secondaryTextColor)
-                        )
-                        Text(
-                            text = "Add to favorites",
-                            color = colorResource(id = R.color.secondaryTextColor)
-                        )
-                    }else{
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            "remove from favorites",
-                            tint = colorResource(id = R.color.secondaryTextColor)
-                        )
-                        Text(
-                            text = "remove from favorites",
-                            color = colorResource(id = R.color.secondaryTextColor)
-                        )
-                    }
-                }
-            }
-
+        if(state.movieItem != null){
+            movieDetailContent(state, homeViewModel, favoriteViewModel, movieDetailViewModel , navController)
+        }else{
+            showErrorDetailView()
         }
 
     }
 
 }
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun movieDetailContent(
+    state: MovieDetailState,
+    homeViewModel: HomeViewModel,
+    favoriteViewModel: FavoriteViewModel,
+    movieDetailViewModel: MovieDetailViewModel,
+    navController: NavController){
+
+    Log.w("TAG", "MovieDetailScreen: ${state.movieItem}", )
+    val painterBackdrop = rememberImagePainter(
+        data = state.movieItem!!.backdrop_pathUrl,
+        builder = {
+            crossfade(true)
+            error(
+                R.drawable.ic_no_image
+            )
+
+        }
+    )
+
+    val painter = rememberImagePainter(
+        data = state.movieItem!!.imageUrl,
+        builder = {
+            crossfade(true)
+            error(
+                R.drawable.ic_no_image
+            )
+
+        }
+    )
+
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+
+        Image(
+            painter = painterBackdrop,
+            contentDescription = "Image item detail",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+        )
+
+        Column (
+            modifier = Modifier
+                .fillMaxSize()
+        ){
+
+            TopAppBar(
+                title = {
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = Color.Transparent
+                ),
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.popBackStack()
+                        }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, "backButton", tint = Color.White)
+                    }
+                }
+            )
+
+
+
+            Spacer(modifier = Modifier.height(200.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Row (
+                    Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start
+
+                ){
+                    Image(
+                        painter = painter,
+                        contentDescription = "Image 2 item detail",
+                        modifier = Modifier
+                            .size(200.dp, 200.dp)
+                    )
+                    Text(
+                        text = state.movieItem!!.overview,
+                        color = colorResource(id = R.color.primaryTextColor),
+                        modifier = Modifier
+                            .padding(end = 10.dp)
+                    )
+                }
+            }
+
+        }
+        FloatingActionButton(
+            onClick = {
+                if (!state.favoriteStatus){
+                    favoriteViewModel.addToFavorites(state.movieItem!!)
+                    state.movieItem!!.favorite = true
+                    movieDetailViewModel.updateFavoriteStatus(true)
+                    homeViewModel.updateMovie(state.movieItem!!)
+                }else{
+                    state.movieItem!!.favorite = false
+                    movieDetailViewModel.updateFavoriteStatus(false)
+                    favoriteViewModel.removeFromFavorites(state.movieItem!!)
+                    homeViewModel.updateMovie(state.movieItem!!)
+                }
+
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomEnd)
+                .padding(16.dp),
+            containerColor = if (!state.favoriteStatus) {
+                colorResource(id = R.color.primaryButtonColor)
+            } else {
+                Color.Red
+            }
+        ) {
+            Row (
+                Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(10.dp)
+            ){
+                if(!state.favoriteStatus){
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        "Add to favorites",
+                        tint = colorResource(id = R.color.secondaryTextColor)
+                    )
+                    Text(
+                        text = "Add to favorites",
+                        color = colorResource(id = R.color.secondaryTextColor)
+                    )
+                }else{
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        "remove from favorites",
+                        tint = colorResource(id = R.color.secondaryTextColor)
+                    )
+                    Text(
+                        text = "remove from favorites",
+                        color = colorResource(id = R.color.secondaryTextColor)
+                    )
+                }
+            }
+        }
+
+    }
+
+}
+
+
+@Composable
+fun showErrorDetailView() {
+    Box (
+        Modifier
+            .fillMaxSize()
+    ){
+        Text(text = "Error with Item")
+    }
+}
+
 @Composable
 fun LoadingAnimation(){
     Box(

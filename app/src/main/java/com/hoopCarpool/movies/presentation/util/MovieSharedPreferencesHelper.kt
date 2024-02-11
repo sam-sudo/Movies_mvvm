@@ -72,6 +72,17 @@ class MovieSharedPreferencesHelper(context: Context) {
 
 
     companion object {
+        @Volatile
+        private var INSTANCE: MovieSharedPreferencesHelper? = null
+
+        fun getInstance(context: Context): MovieSharedPreferencesHelper {
+            return INSTANCE ?: synchronized(this) {
+                val instance = MovieSharedPreferencesHelper(context)
+                INSTANCE = instance
+                instance
+            }
+        }
+
         private val FAVORITE_MOVIES_KEY = stringSetPreferencesKey("favorite_movies")
     }
 

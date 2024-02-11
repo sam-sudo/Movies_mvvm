@@ -7,5 +7,6 @@ data class MoviesViewState(
     val swipeRefreshState: Boolean = false,
     val movies: List<Movie> = emptyList(),
     val searchText: String = "",
-    val error: String? = null
+    val error: String? = null,
+    val previousNumber: Int = 0
 )

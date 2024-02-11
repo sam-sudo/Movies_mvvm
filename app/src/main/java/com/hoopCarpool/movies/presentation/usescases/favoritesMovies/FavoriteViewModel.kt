@@ -2,28 +2,32 @@ package com.hoopCarpool.movies.presentation.usescases.favoritesMovies
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hoopCarpool.movies.domain.model.Movie
-import com.hoopCarpool.movies.providers.services.MoviesProvider
+import com.hoopCarpool.movies.domain.repository.MoviesRepository
 import com.hoopCarpool.util.Constants
 import com.hoopCarpool.movies.presentation.util.MovieSharedPreferencesHelper
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoriteViewModel(private val context: Context): ViewModel() {
+@HiltViewModel
+class FavoriteViewModel @Inject constructor(
+    val repository: MoviesRepository,
+    @ApplicationContext private val context: Context
+): ViewModel() {
 
-    private val movieSharedPreferencesHelper = MovieSharedPreferencesHelper(context)
+    private val _state = MutableStateFlow(FavoriteMoviesState())
+    val state = _state.asStateFlow()
 
-    var movieProvider = MoviesProvider(context)
+    private val movieSharedPreferencesHelper = MovieSharedPreferencesHelper.getInstance(context)
 
-
-    private val _favoriteMovies = MutableLiveData<List<Movie>>(emptyList())
-    val favoriteMovies: LiveData<List<Movie>> get() = _favoriteMovies
-
-    var favoriteMoviesArrayList = ArrayList<Movie>()
 
     init {
         loadFavoriteMovies()
@@ -33,36 +37,40 @@ class FavoriteViewModel(private val context: Context): ViewModel() {
     fun addToFavorites(movie: Movie) {
         viewModelScope.launch {
             Log.w("TAG", "addToFavorites: 1", )
-            if(!favoriteMoviesArrayList.contains(movie)){
+            if(!state.value.favoritesMoviesArraylist.contains(movie)){
                 Log.w("TAG", "addToFavorites: 2", )
 
-                favoriteMoviesArrayList.add(movie)
+                state.value.favoritesMoviesArraylist.add(movie)
                 movieSharedPreferencesHelper.addToFavorites(movie.id)
             }
         }
-        _favoriteMovies.value = favoriteMoviesArrayList
+        _state.update {
+            it.copy(favoritesMoviesArraylist = state.value.favoritesMoviesArraylist)
+        }
     }
 
     fun removeFromFavorites(movie: Movie) {
         viewModelScope.launch {
             Log.w("TAG", "movie: $movie", )
-            Log.w("TAG", "removeFromFavorites: $favoriteMoviesArrayList", )
+            Log.w("TAG", "removeFromFavorites: $state.value.favoritesMoviesArraylist", )
             Log.w(
                 "TAG",
                 "favoriteMoviesArrayList.contains(movie): ${
-                    favoriteMoviesArrayList.contains(
+                    state.value.favoritesMoviesArraylist.contains(
                         movie
                     )
                 }",
             )
 
-            var isMovieInList = favoriteMoviesArrayList.find { it.id == movie.id }
+            var isMovieInList = state.value.favoritesMoviesArraylist.find { it.id == movie.id }
 
             if(isMovieInList != null){
-                favoriteMoviesArrayList.remove(movie)
+                state.value.favoritesMoviesArraylist.remove(movie)
                 movieSharedPreferencesHelper.removeFromFavorites(movie.id)
 
-                _favoriteMovies.postValue(favoriteMoviesArrayList)
+                _state.update {
+                    it.copy(favoritesMoviesArraylist = state.value.favoritesMoviesArraylist)
+                }
             }
 
         }
@@ -86,36 +94,56 @@ class FavoriteViewModel(private val context: Context): ViewModel() {
             Log.w("TAG", "loadFavoriteMovies: $favoriteMoviesSet", )
             favoriteMoviesSet.forEach{movieId ->
 
-                var movie = movieProvider.getMovieDetail(movieId)
-                Log.w("TAG", "loadFavoriteMovies: before favorite $movie", )
+                repository.getMovieById(movieId)
+                    .onRight { response ->
 
-                movie = movie?.copy(
-                    imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
-                    backdrop_pathUrl = Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path,
-                    favorite = true
-                )
-                if (movie != null) {
-                    favoriteList.add(movie)
-                }
+                        var movie = response.body()
 
-                Log.w("TAG", "loadFavoriteMovies: favorite $movie", )
+
+                        Log.w("TAG", "loadFavoriteMovies: before favorite $movie", )
+
+                        movie = movie?.copy(
+                            imageUrl = Constants.API_URL_MOVIES_IMAGES + movie.imagePath,
+                            backdrop_pathUrl = Constants.API_URL_MOVIES_IMAGES + movie.backdrop_path,
+                            favorite = true
+                        )
+                        if (movie != null) {
+                            favoriteList.add(movie)
+                        }
+
+                        Log.w("TAG", "loadFavoriteMovies: favorite $movie", )
+                    }
+                    .onLeft {
+
+                    }
+
 
             }
 
-            favoriteMoviesArrayList = favoriteList
-            _favoriteMovies.value = favoriteList
+
+            _state.update {
+                it.copy(
+                    favoritesMovies = favoriteList,
+                    favoritesMoviesArraylist = favoriteList
+                )
+            }
         }
     }
 
     fun updateMovie(updatedMovie: Movie) {
-        val currentMovies = _favoriteMovies.value.orEmpty().toMutableList()
+        val currentMovies = state.value.favoritesMovies.toMutableList()
         val existingMovieIndex = currentMovies.indexOfFirst { it.id == updatedMovie.id }
 
         if (existingMovieIndex != -1) {
             currentMovies[existingMovieIndex] = updatedMovie
         }
 
-        _favoriteMovies.value = currentMovies
+
+        _state.update {
+            it.copy(
+                favoritesMovies = currentMovies
+            )
+        }
     }
 
 

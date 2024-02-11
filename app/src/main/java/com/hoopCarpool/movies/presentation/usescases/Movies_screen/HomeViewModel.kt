@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.hoopCarpool.movies.domain.model.Movie
 import com.hoopCarpool.movies.domain.repository.MoviesRepository
 import com.hoopCarpool.util.Constants
-import com.hoopCarpool.movies.providers.services.MoviesProvider
 import com.hoopCarpool.movies.presentation.util.MovieSharedPreferencesHelper
 import com.hoopCarpool.movies.presentation.util.sendEvent
 import com.hoopCarpool.util.Event
@@ -30,19 +29,10 @@ class HomeViewModel @Inject constructor(
     private val _state = MutableStateFlow(MoviesViewState())
     val state = _state.asStateFlow()
 
-    //var movieProvider = MoviesProvider( context)
-
-    /*private val _movies = MutableLiveData<List<Movie>>()
-    val movies: LiveData<List<Movie>> get() = _movies*/
-
     private var moviesInmutable = listOf<Movie>()
 
-    /*private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading = _isLoading*/
+    val movieSharedPreferencesHelper = MovieSharedPreferencesHelper.getInstance(context)
 
-    val movieSharedPreferencesHelper = MovieSharedPreferencesHelper(context)
-
-    private var previousNumber: Int? = null
 
 
     init {
@@ -189,31 +179,6 @@ class HomeViewModel @Inject constructor(
         return null
     }
 
-    /*fun loadMovies(){
-        *//*var newMovies = movies.ge
-        _movies.postValue(newMovies)
-        movies = ArrayList(newMovies)*//*
-
-        _isLoading.value = true
-        viewModelScope.launch {
-            try {
-
-                var movies = movieProvider.getPopularMoviesByPage(1)
-
-                var moviesWitFavorites = checkFavoritesMovies(movies)
-                _isLoading.value = false
-                if (_movies.value != moviesWitFavorites) {
-                    _movies.value = moviesWitFavorites
-                }
-                moviesInmutable = moviesWitFavorites
-
-            }catch (e: Exception){
-                Log.e("TAG", "loadMovies exeption ${e.message} ", )
-            }
-        }
-
-    }*/
-
     fun loadRandomMovies(){
         var randomPage = getRandomNumber()
         viewModelScope.launch {
@@ -274,13 +239,15 @@ class HomeViewModel @Inject constructor(
 
     }
 
-    fun getRandomNumber(): Int {
+    private fun getRandomNumber(): Int {
         var randomNumber: Int
         do {
             randomNumber = (1..10).random()
-        } while (randomNumber == previousNumber)
+        } while (randomNumber == state.value.previousNumber)
 
-        previousNumber = randomNumber
+        _state.update {
+            it.copy(previousNumber = randomNumber)
+        }
         return randomNumber
     }
 

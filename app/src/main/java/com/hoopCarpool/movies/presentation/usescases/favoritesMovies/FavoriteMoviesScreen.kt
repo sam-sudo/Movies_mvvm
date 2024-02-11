@@ -30,6 +30,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.hoopCarpool.movies.R
 import com.hoopCarpool.movies.presentation.usescases.Movies_screen.components.MovieListCard
@@ -37,6 +38,8 @@ import com.hoopCarpool.movies.presentation.usescases.Movies_screen.components.Mo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteMoviesScreen( navController: NavController,  viewModel: FavoriteViewModel){
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier
@@ -74,7 +77,7 @@ fun FavoriteMoviesScreen( navController: NavController,  viewModel: FavoriteView
                 .align(Alignment.TopStart)
         )
 
-        FavoriteListScreen(viewModel = viewModel, navController = navController)
+        FavoriteListScreen(state = state, viewModel = viewModel, navController = navController)
 
     }
 
@@ -83,20 +86,19 @@ fun FavoriteMoviesScreen( navController: NavController,  viewModel: FavoriteView
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FavoriteListScreen(viewModel: FavoriteViewModel, navController: NavController) {
-    val favoriteMovies by viewModel.favoriteMovies.observeAsState(emptyList())
+fun FavoriteListScreen(state: FavoriteMoviesState, viewModel: FavoriteViewModel, navController: NavController) {
 
     LaunchedEffect(Unit) {
         viewModel.loadFavoriteMovies()
     }
 
-    Log.w("TAG", "FavoriteListScreen: ${favoriteMovies}", )
+    Log.w("TAG", "FavoriteListScreen: ${state.favoritesMovies}", )
     Column (
         modifier = Modifier
             .padding(top = 56.dp)
     ){
 
-        if(favoriteMovies.isEmpty()){
+        if(state.favoritesMovies.isEmpty()){
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -110,7 +112,7 @@ fun FavoriteListScreen(viewModel: FavoriteViewModel, navController: NavControlle
             }
         }else{
             LazyColumn {
-                items(favoriteMovies) { movie ->
+                items(state.favoritesMovies) { movie ->
                     MovieListCard(movie = movie, navController)
                 }
             }
